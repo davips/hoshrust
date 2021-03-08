@@ -1,0 +1,7 @@
+[workspace]
+members= ["rust", "pyo3"]
+
+[profile.release]
+lto = "fat"
+incremental = true
+#debug = true
