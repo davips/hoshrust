@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2021. Davi Pereira dos Santos
- * This file is part of the halg project.
+ * This file is part of the halgpy project.
  * Please respect the license - more about this in the section (*) below.
  *
- * halg is free software: you can redistribute it and/or modify
+ * halgpy is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * halg is distributed in the hope that it will be useful,
+ * halgpy is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with halg.  If not, see <http://www.gnu.org/licenses/>.
+ * along with halgpy.  If not, see <http://www.gnu.org/licenses/>.
  *
  * (*) Removing authorship by any means, e.g. by distribution of derived
  * works or verbatim, obfuscated, compiled or rewritten versions of any
@@ -23,58 +23,52 @@
  * Relevant employers or funding agencies will be notified accordingly.
  */
 
+// #![feature(iterator_fold_self)]
 use std::collections::VecDeque;
 use std::str;
 use std::time::Instant;
-use reduce::Reduce;
+pub mod math;
 
-use ::halg::{
-    b62_to_str, digest, digest_to_int, from_b62, int_to_digest, int_to_perm, inv, mul, perm_to_int, to_b62, DIGITS,
+use math::{
+    b62_to_str, digest, digest_to_int, from_b62, int_to_digest, int_to_perm, minv, mul, perm_to_int, to_b62, DIGITS,
 };
-use std::convert::TryInto;
+use std::num::Wrapping;
+use crate::math::PERM;
 
 fn main() {
-    let mut lst: VecDeque<(u128, DIGITS)> = VecDeque::new();
-    let now = Instant::now();
-    for i in 1..100_000 {
-        let content = int_to_digest(876123876213876123873612 + i);
-        let digest = digest(&content);
-        // println!("{:08b}", digest[0]);
-        let n = digest_to_int(&digest);
-        let digits = to_b62(&n);
-        // println!("{}", digits);
-        let n = from_b62(digits);
-        let perm = int_to_perm(&n);
-        let m = inv(&mul(&perm, &perm));
-        let unperm = perm_to_int(&m);
-        // println!("{} {} {:?}", n, unperm, perm);
-        let res = to_b62(&n);
-        lst.push_front((unperm, res));
+    for _i in 0..6 {
+        let mut lst: VecDeque<(PERM, DIGITS)> = VecDeque::new();
+        let now = Instant::now();
+        for i in 1..10_000 {
+            let content = int_to_digest(876123876213876123873612 + i);
+            let digest = digest(&content);
+            let n = digest_to_int(&digest);
+            let perm = int_to_perm(&n);  // 350ns
+            // let perm2 = &mut perm.clone();
+            // let perm2 = mul(&perm, perm2);
+            lst.push_front((perm, to_b62(&n)));
+        }
+
+        let t = now.elapsed().as_nanos() as f64 / 10_000.0;
+        let res = to_b62(&295232799039604140847618609643519999999);
+        let resd = from_b62(&res);
+        let x:u128 = 340282366920938463463374607431768211455;
+        let y:u128 = 2;
+        println!(
+            "{} {}us  <{}>  {} {}", math::add(&x, &math::ainv(&math::ainv(&y))),
+            t.round() / 1000.0,
+            str::from_utf8(&res).unwrap(),
+            lst.len(),
+            resd
+        );
+
     }
-
-    let t = now.elapsed().as_nanos() as f64 / 100_000.0;
-    let res = to_b62(&295232799039604140847618609643519999999);
-    let resd = from_b62(res);
-    println!(
-        " {}ns  <{}>  {} {}",
-        t.round(),
-        str::from_utf8(&res).unwrap(),
-        lst.len(),
-        resd
-    );
-
-    let perm = int_to_perm(&295232799039604140847618609643519999);
-    let m = mul(&perm, &perm);
-    println!(" {:?} {:?}", m, b62_to_str(&m));
-    let mi = inv(&perm);
-    println!(" {:?}", perm);
-    println!(" {:?}", (&mul(&m, &mi)));
 }
 
 
 // /// Take an array representing a sequence of 3-tuples and fold it through an arbitrary sandwich logic.
 // fn keep_largest(lst: &[u8]) -> [u8; 3] {
-//     lst.chunks(3).reduce(|x, y| &[x[0], y[1], x[0]]).unwrap()
+//     lst.chunks(3).map(|x| [x[0], x[1], x[2]]).reduce(|x, y| [x[0], y[1], x[0]]).unwrap()
 // }
 // /*
 // 3  |     lst.chunks(3).reduce(|x, y| [x[0], y[1], x[0]]).unwrap()

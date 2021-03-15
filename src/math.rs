@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2021. Davi Pereira dos Santos
- * This file is part of the halg project.
+ * This file is part of the halgpy project.
  * Please respect the license - more about this in the section (*) below.
  *
- * halg is free software: you can redistribute it and/or modify
+ * halgpy is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * halg is distributed in the hope that it will be useful,
+ * halgpy is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with halg.  If not, see <http://www.gnu.org/licenses/>.
+ * along with halgpy.  If not, see <http://www.gnu.org/licenses/>.
  *
  * (*) Removing authorship by any means, e.g. by distribution of derived
  * works or verbatim, obfuscated, compiled or rewritten versions of any
@@ -28,6 +28,7 @@ use std::convert::TryInto;
 use std::str;
 #[rustversion::nightly]
 use specialized_div_rem as sdr;
+use std::ascii::escape_default;
 
 const ALPH: [u8; 62] = *b"0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
 const ALPHREV: [usize; 123] = [
@@ -41,6 +42,8 @@ pub const MAXN: u128 = 295232799039604140847618609643519999999;
 pub const PERM_SIZE: usize = 34;
 pub const NDIGITS: usize = 22;
 
+pub type HEX = [u8; 2 * NBYTES];
+
 pub type PERM = [u8; PERM_SIZE];
 pub type DIGITS = [u8; NDIGITS];
 /*
@@ -50,7 +53,12 @@ pub type DIGITS = [u8; NDIGITS];
 */
 
 pub fn b62_to_str(bytes: &[u8]) -> String {
-    unsafe { str::from_utf8_unchecked(&bytes).to_string() }
+    let mut visible = String::new();
+    for &b in bytes {
+        let part: Vec<u8> = escape_default(b).collect();
+        visible.push_str(str::from_utf8(&part).unwrap());
+    }
+    visible
 }
 
 pub fn digest(bytes: &[u8]) -> [u8; NBYTES] {
@@ -93,7 +101,7 @@ pub fn to_b62(n: &u128) -> DIGITS {
     s
 }
 
-pub fn from_b62(digits: DIGITS) -> u128 {
+pub fn from_b62(digits: &[u8]) -> u128 {
     let mut power: u128 = 1;
     let mut iter = digits.iter().rev();
     let fst = *iter.next().unwrap() as usize;
@@ -137,7 +145,7 @@ pub fn int_to_perm(n: &u128) -> PERM {
     perm
 }
 
-pub fn perm_to_int(p: &PERM) -> u128 {
+pub fn perm_to_int(p: &[u8]) -> u128 {
     let mut avail: Vec<u8> = (0..PERM_SIZE as u8).collect();
     let mut i: u128 = 1;
     let mut n: u128 = 0;
@@ -150,7 +158,18 @@ pub fn perm_to_int(p: &PERM) -> u128 {
     n
 }
 
-pub fn mul(a: &[u8], b: &[u8]) -> [u8; PERM_SIZE] {
+#[inline]
+pub fn add(a: &u128, b: &u128) -> u128 {
+    a.wrapping_add(*b)
+}
+
+#[inline]
+pub fn ainv(a: &u128) -> u128 {
+    u128::max_value().wrapping_sub(*a).wrapping_add(1)
+}
+
+#[inline]
+pub fn mul(a: &[u8], b: &[u8]) -> PERM {
     let mut r = [0 as u8; PERM_SIZE];
     for i in 0..PERM_SIZE {
         r[i] = a[b[i as usize] as usize]
@@ -158,10 +177,28 @@ pub fn mul(a: &[u8], b: &[u8]) -> [u8; PERM_SIZE] {
     r
 }
 
-pub fn inv(p: &[u8; PERM_SIZE]) -> [u8; PERM_SIZE] {
+#[inline]
+pub fn minv(a: &[u8]) -> [u8; PERM_SIZE] {
     let mut r = [0 as u8; PERM_SIZE];
     for i in 0..PERM_SIZE {
-        r[p[i] as usize] = i as u8
+        r[a[i] as usize] = i as u8
     }
     r
 }
+
+
+// pub fn fnwrap<'a>(f: fn(&mut [u8], &mut [u8])) -> impl Fn(&mut [u8], &'a mut [u8]) ->
+// &'a mut [u8] {
+//     move |a, b| {
+//         f(a, b);
+//         b
+//     }
+// }
+
+
+// pub fn mul(a: &[u8], b: &mut [u8]) {
+//     // let mut r = [0 as u8; PERM_SIZE];
+//     for i in 0..PERM_SIZE {
+//         b[i] = a[b[i as usize] as usize]
+//     }
+// }

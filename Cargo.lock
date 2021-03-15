@@ -169,22 +169,13 @@ dependencies = [
 name = "halg"
 version = "0.1.0"
 dependencies = [
+ "arrayref",
  "blake3",
  "im",
  "pyo3",
  "reduce",
  "rustversion",
  "specialized-div-rem",
-]
-
-[[package]]
-name = "halgpy"
-version = "0.1.0"
-dependencies = [
- "blake3",
- "halg",
- "pyo3",
- "reduce",
 ]
 
 [[package]]
