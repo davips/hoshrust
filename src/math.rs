@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2021. Davi Pereira dos Santos
- * This file is part of the halgpy project.
+ * This file is part of the osh project.
  * Please respect the license - more about this in the section (*) below.
  *
- * halgpy is free software: you can redistribute it and/or modify
+ * osh is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * halgpy is distributed in the hope that it will be useful,
+ * osh is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with halgpy.  If not, see <http://www.gnu.org/licenses/>.
+ * along with osh.  If not, see <http://www.gnu.org/licenses/>.
  *
  * (*) Removing authorship by any means, e.g. by distribution of derived
  * works or verbatim, obfuscated, compiled or rewritten versions of any
@@ -124,9 +124,10 @@ pub fn int_to_digest(n: u128) -> [u8; NBYTES] {
 
 #[inline]
 pub fn int_to_perm(n: &u128) -> PERM {
-    if n >> 127 == 1 {
+    if n > &295232799039604140847618609643519999999u128 {
         panic!(
             "One operand exceeeds the order 34! of the set of all 34-permutations.
+            Maximum value: 295232799039604140847618609643519999999
             Hint: operand %= 34!
             Alternative 2: Set at least the most significant bit to zero.
             Alternative 3: Set at least the most significant byte to zero.

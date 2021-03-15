@@ -1,5 +1,5 @@
 [package]
-name = "halg"
+name = "osh"
 version = "0.2103.0"
 authors = ["davips <dpsabc@gmail.com>"]
 edition = "2018"
@@ -9,7 +9,7 @@ readme = "README.md"
 divrem = ["specialized-div-rem"]
 
 [lib]
-name = "halg"
+name = "osh"
 ## crate-type = ["cdylib", "rlib"]
 crate-type = ["cdylib"]  # produce a smaller binary, with no Rust-specific information inside of it
 

@@ -1,8 +1,8 @@
-![test](https://github.com/davips/halg/workflows/test/badge.svg)
-[![codecov](https://codecov.io/gh/davips/halg/branch/main/graph/badge.svg)](https://codecov.io/gh/davips/halg)
+![test](https://github.com/davips/osh/workflows/test/badge.svg)
+[![codecov](https://codecov.io/gh/davips/osh/branch/main/graph/badge.svg)](https://codecov.io/gh/davips/osh)
 
-# halg
-Fast cryptographic hash and algebra for Rust and Python.
+# osh
+Fast cryptographic hash (half-blake3) and operators for Rust and Python.
 
 ## Python installation
 ### from package
@@ -12,18 +12,21 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install from PyPI
-pip install halg
+pip install osh
 ```
 
 ### from source
 ```bash
 cd my-project
-git clone https://github.com/davips/halg ../halg
-pip install -e ../halg
+git clone https://github.com/davips/osh ../osh
+pip install -e ../osh
 ```
 
 
-### Features
- 
-
 ### Examples
+<<operation>>
+
+
+
+
+### Features

@@ -1,20 +1,20 @@
 /*
  * Copyright (c) 2021. Davi Pereira dos Santos
- * This file is part of the halgpy project.
+ * This file is part of the osh project.
  * Please respect the license - more about this in the section (*) below.
  *
- * halgpy is free software: you can redistribute it and/or modify
+ * osh is free software: you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
  * the Free Software Foundation, either version 3 of the License, or
  * (at your option) any later version.
  *
- * halgpy is distributed in the hope that it will be useful,
+ * osh is distributed in the hope that it will be useful,
  * but WITHOUT ANY WARRANTY; without even the implied warranty of
  * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
  * GNU General Public License for more details.
  *
  * You should have received a copy of the GNU General Public License
- * along with halgpy.  If not, see <http://www.gnu.org/licenses/>.
+ * along with osh.  If not, see <http://www.gnu.org/licenses/>.
  *
  * (*) Removing authorship by any means, e.g. by distribution of derived
  * works or verbatim, obfuscated, compiled or rewritten versions of any
@@ -46,7 +46,7 @@ fn pybytes(bin: &[u8]) -> PyObject {
 /// A Python module implemented in Rust.
 #[pymodule]
 #[cfg(not(test))]
-fn halg(py: Python, m: &PyModule) -> PyResult<()> {
+fn osh(py: Python, m: &PyModule) -> PyResult<()> {
     let _ = py;
     m.add_function(wrap_pyfunction!(b62, m)?)?;
     m.add_function(wrap_pyfunction!(mul, m)?)?;
@@ -184,8 +184,8 @@ Rust class abandoned, reason:
 
 /// A Python class implemented in Rust.
 #[cfg(not(test))]
-#[pyclass(module = "halg", subclass, freelist = 10)]
-struct Halg {
+#[pyclass(module = "hash", subclass, freelist = 10)]
+struct Hash {
     n: u128,
     id: DIGITS,
     bin: PERM,
@@ -193,7 +193,7 @@ struct Halg {
 
 #[pymethods]
 #[cfg(not(test))]
-impl Halg {
+impl Hash {
     #[new]
     #[args(perm = "&[255; PERM_SIZE]", blob = "&[255; 1]")]
     fn new(perm: &[u8], blob: &[u8]) -> Self {
@@ -210,7 +210,7 @@ impl Halg {
         };
         let (n, bin) = tup;
         let id = to_b62(&n);
-        Halg { n, id, bin }
+        Hash { n, id, bin }
     }
 
     #[getter]
@@ -235,11 +235,11 @@ impl Halg {
 }
 
 #[cfg(not(test))]
-unsafe impl Send for Halg {}
+unsafe impl Send for Hash {}
 
 #[pyproto]
 #[cfg(not(test))]
-impl PyObjectProtocol for Halg {
+impl PyObjectProtocol for Hash {
     fn __str__(&self) -> PyObject {
         pystr(&self.id)
     }

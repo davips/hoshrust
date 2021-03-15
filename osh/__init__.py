@@ -1,19 +1,19 @@
 #  Copyright (c) 2021. Davi Pereira dos Santos
-#  This file is part of the halg project.
+#  This file is part of the osh project.
 #  Please respect the license - more about this in the section (*) below.
 #
-#  halg is free software: you can redistribute it and/or modify
+#  osh is free software: you can redistribute it and/or modify
 #  it under the terms of the GNU General Public License as published by
 #  the Free Software Foundation, either version 3 of the License, or
 #  (at your option) any later version.
 #
-#  halg is distributed in the hope that it will be useful,
+#  osh is distributed in the hope that it will be useful,
 #  but WITHOUT ANY WARRANTY; without even the implied warranty of
 #  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
 #  GNU General Public License for more details.
 #
 #  You should have received a copy of the GNU General Public License
-#  along with halg.  If not, see <http://www.gnu.org/licenses/>.
+#  along with osh.  If not, see <http://www.gnu.org/licenses/>.
 #
 #  (*) Removing authorship by any means, e.g. by distribution of derived
 #  works or verbatim, obfuscated, compiled or rewritten versions of any
@@ -23,12 +23,12 @@
 
 __version__ = '0.2103.0'
 
-from .halg import (
+from .osh import (
     n_bin_id_fromblob, n_id_fromperm, bin_id_fromn, n_bin_fromid, mul, minv, add, ainv, div, muls, mulpairs
 )
 
 
-class Halg:
+class Hash:
     def __init__(self, n=None, blob=None, id=None, bin=None):
         if blob:  # 1.54us
             self._n, self._bin, self._id = n_bin_id_fromblob(blob)
@@ -40,7 +40,7 @@ class Halg:
             self._n, self._id = n_id_fromperm(self._bin)
         elif self._id:  # 1.17us
             self._n, self._bin = n_bin_fromid(self._id)
-        elif self._n:  # 1.49us vs 3.7us (rust vs python)
+        elif self._n is not None:  # 1.49us vs 3.7us (rust vs python)
             self._bin, self._id = bin_id_fromn(self._n)
         else:
             raise Exception("Missing argument.")
@@ -64,21 +64,24 @@ class Halg:
         return self._n
 
     def __mul__(self, other):
-        return Halg(bin=mul(self.bin, other.bin))  # 1.43us vs 2.47us
+        return Hash(bin=mul(self.bin, other.bin))  # 1.43us vs 2.47us
 
     def __invert__(self):  # 560ns (rust)
-        return Halg(bin=minv(self.bin))
+        return Hash(bin=minv(self.bin))
 
     def __truediv__(self, other):  # 704ns vs 1.26us (div vs mul+minv)
-        return Halg(bin=div(self.bin, other.bin))
+        return Hash(bin=div(self.bin, other.bin))
 
     def __add__(self, other):  # 660ns vs 534ns (better with python)
-        return Halg(n=(self.n + other.n) % 295232799039604140847618609643520000000)  # 34!
+        return Hash(n=(self.n + other.n) % 295232799039604140847618609643520000000)  # 34!
 
     def __sub__(self, other):  # 530ns (python)
-        return Halg(n=(self.n - other.n) % 295232799039604140847618609643520000000)  # 34!
+        return Hash(n=(self.n - other.n) % 295232799039604140847618609643520000000)  # 34!
 
     def __str__(self):
+        return self.id
+
+    def __repr__(self):
         return self.id
 
     @classmethod
@@ -86,9 +89,9 @@ class Halg:
         # pp = (p.bin for p in perms)
         # bytes = pack('34s' * len(perms), *pp)
         # return Halg(bin=mulmany_ser(bytes))
-        return Halg(bin=muls([p.bin for p in perms]))  # faster than pack at least until 15 elements (2.66us)
+        return Hash(bin=muls([p.bin for p in perms]))  # faster than pack at least until 15 elements (2.66us)
 
     @classmethod
     def pairmuls(cls, *pairs):
         results = mulpairs([(p.bin) for p in pairs])
-        return [Halg(bin=res) for res in results]
+        return [Hash(bin=res) for res in results]
