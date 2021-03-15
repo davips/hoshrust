@@ -1,7 +1,7 @@
-![test](https://github.com/davips/osh/workflows/test/badge.svg)
-[![codecov](https://codecov.io/gh/davips/osh/branch/main/graph/badge.svg)](https://codecov.io/gh/davips/osh)
+![test](https://github.com/davips/hosh/workflows/test/badge.svg)
+[![codecov](https://codecov.io/gh/davips/hosh/branch/main/graph/badge.svg)](https://codecov.io/gh/davips/hosh)
 
-# osh
+# hosh
 Fast cryptographic hash (half-blake3) and operators for Rust and Python.
 
 ## Python installation
@@ -12,14 +12,14 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install from PyPI
-pip install osh
+pip install hosh
 ```
 
 ### from source
 ```bash
 cd my-project
-git clone https://github.com/davips/osh ../osh
-pip install -e ../osh
+git clone https://github.com/davips/hosh ../hosh
+pip install -e ../hosh
 ```
 
 
@@ -29,7 +29,7 @@ pip install -e ../osh
 <p>
 
 ```python3
-from osh import Hash
+from hosh import Hash
 
 # Hashes can be multiplied.
 a = Hash(blob=b"Some large binary content...")

@@ -1,5 +1,5 @@
 # Basic operations
-from osh import Hash
+from hosh import Hash
 
 # Hashes can be multiplied.
 a = Hash(blob=b"Some large binary content...")
