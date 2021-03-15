@@ -12,14 +12,14 @@ python3 -m venv venv
 source venv/bin/activate
 
 # Install from PyPI
-pip install halgpy
+pip install halg
 ```
 
 ### from source
 ```bash
 cd my-project
-git clone https://github.com/davips/halg ../halgpy
-pip install -e ../halgpy
+git clone https://github.com/davips/halg ../halg
+pip install -e ../halg
 ```
 
 
@@ -27,7 +27,3 @@ pip install -e ../halgpy
  
 
 ### Examples
-
-<<ap>>
-
-<<gp>>

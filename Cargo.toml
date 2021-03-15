@@ -1,8 +1,9 @@
 [package]
 name = "halg"
-version = "0.1.0"
+version = "0.2103.0"
 authors = ["davips <dpsabc@gmail.com>"]
 edition = "2018"
+readme = "README.md"
 
 [features]
 divrem = ["specialized-div-rem"]
@@ -11,6 +12,12 @@ divrem = ["specialized-div-rem"]
 name = "halg"
 ## crate-type = ["cdylib", "rlib"]
 crate-type = ["cdylib"]  # produce a smaller binary, with no Rust-specific information inside of it
+
+[package.metadata.maturin]
+classifier = [
+  "Programming Language :: Rust",
+  "Operating System :: POSIX :: Linux",
+]
 
 [dependencies]
 #primitive-types = "0.9.0"  //U256 is too slow to generate b62 digits

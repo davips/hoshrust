@@ -30,9 +30,8 @@ use std::time::Instant;
 pub mod math;
 
 use math::{
-    b62_to_str, digest, digest_to_int, from_b62, int_to_digest, int_to_perm, minv, mul, perm_to_int, to_b62, DIGITS,
+    digest, digest_to_int, from_b62, int_to_digest, int_to_perm, to_b62, DIGITS,
 };
-use std::num::Wrapping;
 use crate::math::PERM;
 
 fn main() {

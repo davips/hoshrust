@@ -30,7 +30,6 @@ use std::convert::TryInto;
 
 use pyo3::{PyClass, PyNativeType, PyObjectProtocol, PyTypeInfo, wrap_pyfunction};
 use pyo3::prelude::*;
-use pyo3::pyclass_slots::{PyClassDict, PyClassWeakRef};
 use pyo3::types::{PyString, PyBytes, PyList, PyInt, PyTuple};
 
 use math::{digest, digest_to_int, DIGITS, HEX, int_to_perm, PERM, PERM_SIZE, perm_to_int, to_b62};

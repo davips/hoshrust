@@ -24,7 +24,7 @@
 __version__ = '0.2103.0'
 
 from .halg import (
-    n_bin_id_fromblob, n_id_fromperm, bin_id_fromn, n_bin_fromid, mul, minv, add, ainv, div, mulmany_ser, mulmany_par
+    n_bin_id_fromblob, n_id_fromperm, bin_id_fromn, n_bin_fromid, mul, minv, add, ainv, div, muls, mulpairs
 )
 
 
@@ -86,9 +86,9 @@ class Halg:
         # pp = (p.bin for p in perms)
         # bytes = pack('34s' * len(perms), *pp)
         # return Halg(bin=mulmany_ser(bytes))
-        return Halg(bin=mulmany_ser([p.bin for p in perms]))  # faster than pack at least until 15 elements (2.66us)
+        return Halg(bin=muls([p.bin for p in perms]))  # faster than pack at least until 15 elements (2.66us)
 
     @classmethod
     def pairmuls(cls, *pairs):
-        results = mulmany_par([(p.bin) for p in pairs])
+        results = mulpairs([(p.bin) for p in pairs])
         return [Halg(bin=res) for res in results]

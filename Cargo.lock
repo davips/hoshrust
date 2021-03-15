@@ -167,7 +167,7 @@ dependencies = [
 
 [[package]]
 name = "halg"
-version = "0.1.0"
+version = "0.2103.0"
 dependencies = [
  "arrayref",
  "blake3",
