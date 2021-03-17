@@ -35,7 +35,7 @@ class Hash:
         if blob:  # 1.54us
             self._n, self._bin, self._id = n_bin_id_fromblob(blob)
         else:
-            self._n, self._id, self._bin = n, id, bin
+            self._n, self._bin, self._id = n, bin, id
 
     def calculate(self):
         if self._bin:  # 1.11us

@@ -30,17 +30,11 @@ use std::convert::TryInto;
 
 use pyo3::{PyClass, PyNativeType, PyObjectProtocol, PyTypeInfo, wrap_pyfunction};
 use pyo3::prelude::*;
-use pyo3::types::{PyString, PyBytes, PyList, PyInt, PyTuple};
+use pyo3::types::{PyString, PyBytes, PyList, PyInt, PyTuple, PyLong};
 
 use math::{digest, DIGITS, HEX, int_to_perm, PERM, PERM_SIZE, perm_to_int, to_b62};
 
 pub mod math;
-
-#[inline]
-fn pybytes(bin: &[u8]) -> PyObject {
-    let gil = Python::acquire_gil();
-    PyBytes::new(gil.python(), bin).into()
-}
 
 
 /// A Python module implemented in Rust.
@@ -72,83 +66,79 @@ fn b62(blob: &[u8]) -> PyResult<String> {
 
 /// doc
 #[pyfunction]
-fn muls(perms: Vec<&PyBytes>) -> PyObject {
+fn muls(py: Python, perms: Vec<&PyBytes>) -> PyObject {
     let mut r: PERM = perms[0].as_bytes().try_into().unwrap();
     for a in &perms[1..] {
         r = math::mul(&r, a.as_bytes());
     }
-    pybytes(&r)
+    PyBytes::new(py, &r).into()
 }
 
 #[pyfunction]
-fn mulpairs(perms: Vec<&PyBytes>) -> PyObject {
-    let mut v = Vec::<&PyBytes>::new();
-    let gil = Python::acquire_gil();
-    let py = gil.python();
+fn mulpairs(py: Python, perms: Vec<&PyBytes>) -> PyObject {
+    let mut v = Vec::<PyObject>::new();
     for chunk in perms.chunks(2) {
         let a: PERM = chunk[0].as_bytes().try_into().unwrap();
         let b = chunk[1].as_bytes();
-        let bin = math::mul(&a, b);
-        v.push(&PyBytes::new(py, &bin));
+        let bin = math::mul(&a, b).to_object(py);
+        v.push(bin);
     }
-    v.into_py(py)
+    PyList::new(py, v).into()
+    // v.into_py(py)
 }
 
 #[pyfunction]
-fn n_bin_id_fromblob(blob: &[u8]) -> (PyObject, PyObject, String) {
+fn n_bin_id_fromblob(py: Python, blob: &[u8]) -> (u128, PyObject, String) {
     let n = u128::from_be_bytes(digest(blob));
     let bin = int_to_perm(&n);
     let id = to_b62(&n);
-    let gil = Python::acquire_gil();
     let idstr = unsafe { String::from_utf8_unchecked(id.to_vec()) };
-    (n.to_object(gil.python()), PyBytes::new(gil.python(), &bin).into(), idstr)
+    (n, PyBytes::new(py, &bin).into(), idstr)
 }
 
 #[pyfunction]
-fn n_id_fromperm(a: &[u8]) -> (PyObject, String) {
+fn n_id_fromperm(py: Python, a: &[u8]) -> (u128, String) {
     let n = perm_to_int(&a);
     let id = to_b62(&n);
-    let gil = Python::acquire_gil();
     let idstr = unsafe { String::from_utf8_unchecked(id.to_vec()) };
-    (n.to_object(gil.python()), idstr)
+    (n, idstr)
 }
 
 #[pyfunction]
-fn bin_id_fromn(n: u128) -> (PyObject, String) {
+fn bin_id_fromn(py: Python, n: u128) -> (PyObject, String) {
     let bin = int_to_perm(&n);
     let id = to_b62(&n);
-    let gil = Python::acquire_gil();
     let idstr = unsafe { String::from_utf8_unchecked(id.to_vec()) };
-    (PyBytes::new(gil.python(), &bin).into(), idstr)
+    (PyBytes::new(py, &bin).into(), idstr)
 }
 
 #[pyfunction]
-fn n_bin_fromid(id: String) -> (PyObject, PyObject) {
+fn n_bin_fromid(py: Python, id: String) -> (u128, PyObject) {
     let n = math::from_b62(id.as_bytes());
     let bin = int_to_perm(&n);
-    let gil = Python::acquire_gil();
-    (n.to_object(gil.python()), PyBytes::new(gil.python(), &bin).into())
+    (n, PyBytes::new(py, &bin).into())
 }
 
 /// doc
 #[pyfunction]
-fn mul(a: &[u8], b: &[u8]) -> PyObject {
+fn mul(py: Python, a: &[u8], b: &[u8]) -> PyObject {
     let r = math::mul(&a, &b);
-    pybytes(&r)
+    // r.to_object(py)
+    PyBytes::new(py, &r).into()
 }
 
 /// doc
 #[pyfunction]
-fn div(a: &[u8], b: &[u8]) -> PyObject {
+fn div(py: Python, a: &[u8], b: &[u8]) -> PyObject {
     let r = math::mul(&a, &math::minv(&b));
-    pybytes(&r)
+    PyBytes::new(py, &r).into()
 }
 
 /// doc
 #[pyfunction]
-fn minv(a: &[u8]) -> PyObject {
+fn minv(py: Python, a: &[u8]) -> PyObject {
     let r = math::minv(&a);
-    pybytes(&r)
+    PyBytes::new(py, &r).into()
 }
 
 /// doc
@@ -246,3 +236,9 @@ impl PyObjectProtocol for Hash {
 }
 
  */
+
+// #[inline]
+// fn pybytes(bin: &[u8]) -> PyObject {
+//     let gil = Python::acquire_gil();
+//     PyBytes::new(gil.python(), bin).into()
+// }

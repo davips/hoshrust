@@ -176,7 +176,7 @@ dependencies = [
 
 [[package]]
 name = "hosh"
-version = "0.2103.2"
+version = "0.210317.0"
 dependencies = [
  "arrayref",
  "blake3",
