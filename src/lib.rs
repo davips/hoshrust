@@ -32,7 +32,7 @@ use pyo3::{PyClass, PyNativeType, PyObjectProtocol, PyTypeInfo, wrap_pyfunction}
 use pyo3::prelude::*;
 use pyo3::types::{PyString, PyBytes, PyList, PyInt, PyTuple};
 
-use math::{digest, digest_to_int, DIGITS, HEX, int_to_perm, PERM, PERM_SIZE, perm_to_int, to_b62};
+use math::{digest, DIGITS, HEX, int_to_perm, PERM, PERM_SIZE, perm_to_int, to_b62};
 
 pub mod math;
 
@@ -66,7 +66,7 @@ fn hosh(py: Python, m: &PyModule) -> PyResult<()> {
 /// doc
 #[pyfunction]
 fn b62(blob: &[u8]) -> PyResult<String> {
-    let ret = math::b62_to_str(&math::to_b62(&math::digest_to_int(&math::digest(blob))));
+    let ret = math::b62_to_str(&math::to_b62(&u128::from_be_bytes(math::digest(blob))));
     Ok(ret.to_string())
 }
 
@@ -96,7 +96,7 @@ fn mulpairs(perms: Vec<&PyBytes>) -> PyObject {
 
 #[pyfunction]
 fn n_bin_id_fromblob(blob: &[u8]) -> (PyObject, PyObject, String) {
-    let n = digest_to_int(&digest(blob));
+    let n = u128::from_be_bytes(digest(blob));
     let bin = int_to_perm(&n);
     let id = to_b62(&n);
     let gil = Python::acquire_gil();

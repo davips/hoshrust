@@ -27,21 +27,20 @@
 use std::collections::VecDeque;
 use std::str;
 use std::time::Instant;
+
 pub mod math;
 
-use math::{
-    digest, digest_to_int, from_b62, int_to_digest, int_to_perm, to_b62, DIGITS,
-};
-use crate::math::PERM;
+use math::{digest, from_b62, int_to_perm, to_b62};
+use crate::math::{PERM, DIGITS, NBYTES};
 
 fn main() {
     for _i in 0..6 {
         let mut lst: VecDeque<(PERM, DIGITS)> = VecDeque::new();
         let now = Instant::now();
         for i in 1..10_000 {
-            let content = int_to_digest(876123876213876123873612 + i);
+            let content: [u8; NBYTES] = u128::to_be_bytes(876123876213876123873612 + i);
             let digest = digest(&content);
-            let n = digest_to_int(&digest);
+            let n = u128::from_be_bytes(digest);
             let perm = int_to_perm(&n);  // 350ns
             // let perm2 = &mut perm.clone();
             // let perm2 = mul(&perm, perm2);
@@ -51,8 +50,8 @@ fn main() {
         let t = now.elapsed().as_nanos() as f64 / 10_000.0;
         let res = to_b62(&295232799039604140847618609643519999999);
         let resd = from_b62(&res);
-        let x:u128 = 340282366920938463463374607431768211455;
-        let y:u128 = 2;
+        let x: u128 = 340282366920938463463374607431768211455;
+        let y: u128 = 2;
         println!(
             "{} {}us  <{}>  {} {}", math::add(&x, &math::ainv(&math::ainv(&y))),
             t.round() / 1000.0,
@@ -60,7 +59,6 @@ fn main() {
             lst.len(),
             resd
         );
-
     }
 }
 

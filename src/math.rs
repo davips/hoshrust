@@ -63,11 +63,11 @@ pub fn b62_to_str(bytes: &[u8]) -> String {
 
 pub fn digest(bytes: &[u8]) -> [u8; NBYTES] {
     let mut h: [u8; 16] = if bytes.len() < 130000 {
-        hash(bytes).as_bytes()[..NBYTES].try_into().unwrap()
+        hash(bytes).as_bytes()[NBYTES..2 * NBYTES].try_into().unwrap()
     } else {
         let mut hasher = Hasher::new();
         hasher.update_with_join::<blake3::join::RayonJoin>(bytes);
-        hasher.finalize().as_bytes()[..NBYTES].try_into().unwrap()
+        hasher.finalize().as_bytes()[NBYTES..2 * NBYTES].try_into().unwrap()
     };
     h[0] = h[0] & 127; //h[0] %= 128;
     h
@@ -112,14 +112,6 @@ pub fn from_b62(digits: &[u8]) -> u128 {
         n += power * c;
     }
     n
-}
-
-pub fn digest_to_int(bytes: &[u8; NBYTES]) -> u128 {
-    u128::from_be_bytes(*bytes)
-}
-
-pub fn int_to_digest(n: u128) -> [u8; NBYTES] {
-    n.to_be_bytes()
 }
 
 #[inline]
@@ -178,6 +170,7 @@ pub fn mul(a: &[u8], b: &[u8]) -> PERM {
     r
 }
 
+
 #[inline]
 pub fn minv(a: &[u8]) -> [u8; PERM_SIZE] {
     let mut r = [0 as u8; PERM_SIZE];
@@ -186,6 +179,17 @@ pub fn minv(a: &[u8]) -> [u8; PERM_SIZE] {
     }
     r
 }
+
+
+// #[inline]
+// pub fn transpose(a: &[u8]) -> PERM {  //funciona? faz sentido?
+//     let mut tr_ls = [0 as u8; PERM_SIZE];
+//     let last = PERM_SIZE - 1;
+//     for i in 0..PERM_SIZE {
+//         tr_ls[last - a[a[i] as usize] as usize] = last as u8 - a[i];
+//     }
+//     return tr_ls;
+// }
 
 
 // pub fn fnwrap<'a>(f: fn(&mut [u8], &mut [u8])) -> impl Fn(&mut [u8], &'a mut [u8]) ->
