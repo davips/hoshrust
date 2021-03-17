@@ -3,6 +3,9 @@
 
 # hosh
 Fast cryptographic hash (half-blake3) and operators for Rust and Python.
+<p><a href="https://github.com/davips/hosh/blob/main/colored-ids.png">
+<img src="https://raw.githubusercontent.com/davips/hosh/main/colored-ids.png" alt="Output as a browser window" width="200" height="200">
+</a></p>
 
 ## Python installation
 ### from package

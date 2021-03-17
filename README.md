@@ -3,6 +3,9 @@
 
 # hosh
 Fast cryptographic hash (half-blake3) and operators for Rust and Python.
+<p><a href="https://github.com/davips/hosh/blob/main/colored-ids.png">
+<img src="https://raw.githubusercontent.com/davips/hosh/main/colored-ids.png" alt="Output as a browser window" width="200" height="200">
+</a></p>
 
 ## Python installation
 ### from package
@@ -37,7 +40,7 @@ b = Hash(blob=b"Some other binary content. Might be, e.g., an action or another 
 c = a * b
 print(f"{a} * {b} = {c}")
 """
-0Sux8dX5O3gkPx5KkGKYKP * 0Q7q8pNuFRZwoBBzM1RYiq = 0EHzVjd9q7pK4AmiZlCffL
+0v58YxIhaae5NfYuXsoC1i * 04orKjYHAZraYORILOVwos = 3yT1A5oLlW2HpjSkgzo2yg
 """
 ```
 
@@ -46,7 +49,7 @@ print(f"{a} * {b} = {c}")
 # Multiplication can be reverted by the inverse hash. Zero is the identity hash.
 print(f"{b} * {~b} = {b * ~b} = 0")
 """
-0Q7q8pNuFRZwoBBzM1RYiq * 3TW3af8GIVKzzojLZbBqq5 = 0000000000000000000000 = 0
+04orKjYHAZraYORILOVwos * 211eErwhEiGnit0beo4tjo = 0000000000000000000000 = 0
 """
 ```
 
@@ -54,7 +57,7 @@ print(f"{b} * {~b} = {b * ~b} = 0")
 
 print(f"{c} * {~b} = {c * ~b} = {a} = a")
 """
-0EHzVjd9q7pK4AmiZlCffL * 3TW3af8GIVKzzojLZbBqq5 = 0Sux8dX5O3gkPx5KkGKYKP = 0Sux8dX5O3gkPx5KkGKYKP = a
+3yT1A5oLlW2HpjSkgzo2yg * 211eErwhEiGnit0beo4tjo = 0v58YxIhaae5NfYuXsoC1i = 0v58YxIhaae5NfYuXsoC1i = a
 """
 ```
 
@@ -62,7 +65,7 @@ print(f"{c} * {~b} = {c * ~b} = {a} = a")
 
 print(f"{~a} * {c} = {~a * c} = {b} = b")
 """
-6Ms8EdXd3yzeddcxefn5FF * 0EHzVjd9q7pK4AmiZlCffL = 0Q7q8pNuFRZwoBBzM1RYiq = 0Q7q8pNuFRZwoBBzM1RYiq = b
+4q4X1jczNK2eKCV4uxEPNk * 3yT1A5oLlW2HpjSkgzo2yg = 04orKjYHAZraYORILOVwos = 04orKjYHAZraYORILOVwos = b
 """
 ```
 
@@ -71,7 +74,7 @@ print(f"{~a} * {c} = {~a * c} = {b} = b")
 # Division is shorthand for reversion.
 print(f"{c} / {b} = {c / b} = a")
 """
-0EHzVjd9q7pK4AmiZlCffL / 0Q7q8pNuFRZwoBBzM1RYiq = 0Sux8dX5O3gkPx5KkGKYKP = a
+3yT1A5oLlW2HpjSkgzo2yg / 04orKjYHAZraYORILOVwos = 0v58YxIhaae5NfYuXsoC1i = a
 """
 ```
 
@@ -80,7 +83,7 @@ print(f"{c} / {b} = {c / b} = a")
 # Hash multiplication is not expected to be commutative.
 print(f"{a * b} != {b * a}")
 """
-0EHzVjd9q7pK4AmiZlCffL != 3qXz8PSpGGugRb0jP9BEzd
+3yT1A5oLlW2HpjSkgzo2yg != 4AvOF9Fbhakd26mosfuuvR
 """
 ```
 
@@ -89,7 +92,7 @@ print(f"{a * b} != {b * a}")
 # Hash multiplication is associative.
 print(f"{a * (b * c)} = {(a * b) * c}")
 """
-2xWdrj6rCfITvCfiU31v96 = 2xWdrj6rCfITvCfiU31v96
+51UdYbEAGI5mVogE4aFFKe = 51UdYbEAGI5mVogE4aFFKe
 """
 ```
 

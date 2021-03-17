@@ -12,8 +12,8 @@ def b62enc(num):
 
 def paint(txt, fgr, fgg, fgb, bgr, bgg, bgb):
     fgcolor = f"#{hex(fgr)[2:].rjust(2, '0')}{hex(fgg)[2:].rjust(2, '0')}{hex(fgb)[2:].rjust(2, '0')}"
-    bgcolor = f"#{hex(bgr)[2:].rjust(2, '0')}{hex(bgg)[2:].rjust(2, '0')}{hex(bgb)[2:].rjust(2, '0')}"
-    return stylize(txt, colored.fg(fgcolor) + colored.attr("bold") + colored.bg(bgcolor))
+    # bgcolor = f"#{hex(bgr)[2:].rjust(2, '0')}{hex(bgg)[2:].rjust(2, '0')}{hex(bgb)[2:].rjust(2, '0')}"
+    return stylize(txt, colored.fg(fgcolor) + colored.attr("bold"))  # + colored.bg(bgcolor))
 
 
 alphabet = tuple("0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz")
@@ -31,7 +31,7 @@ def lim(x):
     return min(255, max(0, x))
 
 
-def colorize128bit(n, s, ampl=0.7, change=0.3):
+def colorize128bit(n, id, ampl=0.7, change=0.3):
     byts = n.to_bytes(16, "big")
     bs = list(reversed(byts))
     margin = 255 * (1 - ampl)
@@ -39,7 +39,7 @@ def colorize128bit(n, s, ampl=0.7, change=0.3):
     fgg = margin + sum(bs[4:8]) % int(255 * ampl)
     fgb = margin + sum(bs[8:12]) % int(255 * ampl)
     out = ""
-    for i, c in enumerate(s):
+    for i, c in enumerate(id):
         quot, dr = divmod(b62dec(c), 4)
         quot, dg = divmod(quot, 4)
         db = quot % 4
