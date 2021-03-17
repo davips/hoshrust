@@ -18,6 +18,14 @@ classifier = [
   "Programming Language :: Rust",
   "Operating System :: POSIX :: Linux",
 ]
+maintainer = "davips"
+maintainer-email = "dpsabc@gmail.com"
+requires-dist = ["colored==1.4.2", "toml==0.10.0"]
+
+#[package.metadata.maturin.scripts]
+#get_42 = "my_project:DummyClass.get_42"
+
+
 
 [dependencies]
 #primitive-types = "0.9.0"  //U256 is too slow to generate b62 digits

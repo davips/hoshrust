@@ -21,7 +21,7 @@
 #  time spent here.
 #  Relevant employers or funding agencies will be notified accordingly.
 
-__version__ = '0.2103.0'
+__version__ = '0.2103.1'
 
 from .hosh import (
     n_bin_id_fromblob, n_id_fromperm, bin_id_fromn, n_bin_fromid, mul, minv, add, ainv, div, muls, mulpairs
