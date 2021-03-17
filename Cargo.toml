@@ -1,6 +1,6 @@
 [package]
 name = "hosh"
-version = "0.2103.1"
+version = "0.2103.2"
 authors = ["davips <dpsabc@gmail.com>"]
 edition = "2018"
 readme = "README.md"
