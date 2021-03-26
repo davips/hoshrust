@@ -101,3 +101,9 @@ class Hash:
     def pairmuls(cls, *pairs):
         results = mulpairs([(p.bin) for p in pairs])
         return [Hash(bin=res) for res in results]
+
+    def __hash__(self):
+        return self.n
+
+    def __eq__(self, other):
+        return self.n == other.n

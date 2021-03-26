@@ -118,12 +118,16 @@ pub fn from_b62(digits: &[u8]) -> u128 {
 pub fn int_to_perm(n: &u128) -> PERM {
     if n > &295232799039604140847618609643519999999u128 {
         panic!(
-            "One operand exceeeds the order 34! of the set of all 34-permutations.
-            Maximum value: 295232799039604140847618609643519999999
-            Hint: operand %= 34!
+            "Provided number (or id or bytes) exceeeds the group order 34!.
+            Impossible to operate such large operand.
+            Maximum value: 295232799039604140847618609643519999999 .
+            
+            Hint, take a modulo: operand %= 34!
             Alternative 2: Set at least the most significant bit to zero.
             Alternative 3: Set at least the most significant byte to zero.
-            Alternative 4: Set at least the most significant base-62 digit to zero."
+            Alternative 4: Set at least the most significant base-62 digit to zero.
+            
+            This limit is due to internal usage of the set of 34-permutations."
         )
     }
     let mut avail: Vec<u8> = (0..PERM_SIZE as u8).collect();
