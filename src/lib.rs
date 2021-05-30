@@ -32,7 +32,7 @@ use pyo3::{PyClass, PyNativeType, PyObjectProtocol, PyTypeInfo, wrap_pyfunction}
 use pyo3::prelude::*;
 use pyo3::types::{PyString, PyBytes, PyList, PyInt, PyTuple, PyLong};
 
-use math::{digest, DIGITS, HEX, int_to_perm, PERM, PERM_SIZE, perm_to_int, to_b62};
+use math::{digest, DIGITS, HEX, int_to_perm, PERM, PERM_SIZE, perm_to_int, to_b62, NBYTES};
 
 pub mod math;
 
@@ -89,7 +89,7 @@ fn mulpairs(py: Python, perms: Vec<&PyBytes>) -> PyObject {
 
 #[pyfunction]
 fn n_bin_id_fromblob(py: Python, blob: &[u8]) -> (u128, PyObject, String) {
-    let n = u128::from_be_bytes(digest(blob));
+    let n = u128::from_be_bytes(digest(blob)); //[..NBYTES / 2].try_into().unwrap());
     let bin = int_to_perm(&n);
     let id = to_b62(&n);
     let idstr = unsafe { String::from_utf8_unchecked(id.to_vec()) };
