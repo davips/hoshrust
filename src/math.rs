@@ -37,7 +37,7 @@ const ALPHREV: [usize; 123] = [
     18, 19, 20, 21, 22, 23, 24, 25, 26, 27, 28, 29, 30, 31, 32, 33, 34, 35, 0, 0, 0, 0, 0, 0, 36, 37, 38, 39, 40, 41,
     42, 43, 44, 45, 46, 47, 48, 49, 50, 51, 52, 53, 54, 55, 56, 57, 58, 59, 60, 61,
 ];
-pub const NBYTES: usize = 32;
+pub const NBYTES: usize = 16;
 pub const MAXN: u128 = 295232799039604140847618609643519999999;
 pub const PERM_SIZE: usize = 34;
 pub const NDIGITS: usize = 22;
@@ -62,13 +62,15 @@ pub fn b62_to_str(bytes: &[u8]) -> String {
 }
 
 pub fn digest(bytes: &[u8]) -> [u8; NBYTES] {
-    if bytes.len() < 130000 {
-        hash(bytes).as_bytes()[..NBYTES].try_into().unwrap()
+    let mut h: [u8; 16] = if bytes.len() < 130000 {
+        hash(bytes).as_bytes()[NBYTES..2 * NBYTES].try_into().unwrap()
     } else {
         let mut hasher = Hasher::new();
         hasher.update_with_join::<blake3::join::RayonJoin>(bytes);
-        hasher.finalize().as_bytes()[..NBYTES].try_into().unwrap()
-    }
+        hasher.finalize().as_bytes()[NBYTES..2 * NBYTES].try_into().unwrap()
+    };
+    h[0] = h[0] & 127; //h[0] %= 128;
+    h
 }
 
 #[rustversion::nightly]
@@ -79,7 +81,7 @@ fn inplace_divmod(a: &mut u128, b: u128) -> u128 {
     qr.1
 }
 
-#[rustversion::stable]
+#[rustversion::beta]
 #[inline]
 fn inplace_divmod(a: &mut u128, b: u128) -> u128 {
     let r = *a % b;
@@ -87,7 +89,7 @@ fn inplace_divmod(a: &mut u128, b: u128) -> u128 {
     r
 }
 
-#[rustversion::beta]
+#[rustversion::stable]
 #[inline]
 fn inplace_divmod(a: &mut u128, b: u128) -> u128 {
     let r = *a % b;
@@ -122,6 +124,20 @@ pub fn from_b62(digits: &[u8]) -> u128 {
 
 #[inline]
 pub fn int_to_perm(n: &u128) -> PERM {
+    if n > &295232799039604140847618609643519999999u128 {
+        panic!(
+            "Provided number (or id or bytes) exceeeds the group order 34!.
+            Impossible to operate such large operand.
+            Maximum value: 295232799039604140847618609643519999999 .
+            
+            Hint, take a modulo: operand %= 34!
+            Alternative 2: Set at least the most significant bit to zero.
+            Alternative 3: Set at least the most significant byte to zero.
+            Alternative 4: Set at least the most significant base-62 digit to zero.
+            
+            This limit is due to internal usage of the set of 34-permutations."
+        )
+    }
     let mut avail: Vec<u8> = (0..PERM_SIZE as u8).collect();
     let mut quot = *n;
     let mut perm: [u8; PERM_SIZE] = [0; PERM_SIZE];

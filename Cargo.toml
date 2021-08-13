@@ -37,7 +37,6 @@ rustversion = "1.0"
 #pipe_macro = "0.1.0"
 arrayref = "0.3.6"
 # unchecked-index = "0.2.2"  # no gains for mul()
-primitive-types = "0.9.0"
 
 [dependencies.pyo3]
 version = "0.13.2"
