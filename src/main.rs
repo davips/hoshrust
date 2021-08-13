@@ -27,6 +27,7 @@
 use std::collections::VecDeque;
 use std::str;
 use std::time::Instant;
+use std::convert::TryInto;
 
 pub mod math;
 
@@ -38,9 +39,10 @@ fn main() {
         let mut lst: VecDeque<(PERM, DIGITS)> = VecDeque::new();
         let now = Instant::now();
         for i in 1..10_000 {
-            let content: [u8; NBYTES] = u128::to_be_bytes(876123876213876123873612 + i);
+            let byts: [u8; NBYTES / 2] = u128::to_be_bytes(83612 + i);
+            let content: [u8; NBYTES] = [byts, byts].concat().try_into().unwrap();
             let digest = digest(&content);
-            let n = u128::from_be_bytes(digest);
+            let n = u128::from_be_bytes(digest[..NBYTES / 2].try_into().unwrap());
             let perm = int_to_perm(&n);  // 350ns
             // let perm2 = &mut perm.clone();
             // let perm2 = mul(&perm, perm2);
@@ -82,4 +84,72 @@ fn main() {
 //         r = [r[0], y[1], r[0]];
 //     }
 //     r
+// }
+
+
+use std::*;
+use std::collections::HashMap;
+//
+// fn m4m<T0, T1, T2, RT>(a: T0, b: T1, mo: T2) -> RT {
+//     "Multiply two unitriangular matrices 4x4 modulo 'mo'.
+//
+//     'a' and 'b' given as lists in the format: [a1,4 a1,3 a2,4 a2,3 a3,4 a1,2]
+//
+//     1 a0 a4 a5
+//     0  1 a2 a3
+//     0  0  1 a1
+//     0  0  0  1
+//
+//     >>> a, b = [51,18340,56,756,456,344], [781,2340,9870,1234,9134,3134]
+//     >>> m4m(b, m4inv(b, 4294967291), 4294967291) == [0,0,0,0,0,0]
+//     True
+//     >>> c = m4m(a, b, 4294967291)
+//     >>> m4m(c, m4inv(b, 4294967291), 4294967291) == a
+//     True
+//     ";
+//     return vec![((((a[0] + b[0]) + (a[5] * b[2])) + (a[1] * b[4])) % mo), (((a[1] + b[1]) + (a[5] * b[3])) % mo), (((a[2] + b[2]) + (a[3] * b[4])) % mo), ((a[3] + b[3]) % mo), ((a[4] + b[4]) % mo), ((a[5] + b[5]) % mo)];
+// }
+//
+// fn m4inv<T0, T1, RT>(m: T0, mo: T1) -> RT {
+//     "Inverse of unitriangular matrix modulo 'mo'
+//
+//     'm' given as a list in the format: [a1,4 a1,3 a2,4 a2,3 a3,4 a1,2]
+//
+//     1 a0 a4 a5
+//     0  1 a2 a3
+//     0  0  1 a1
+//     0  0  0  1
+//
+//     Based on https://groupprops.subwiki.org/wiki/Unitriangular_matrix_group:UT(4,p)
+//
+//     >>> e = [42821,772431,428543,443530,42121,7213]
+//     >>> m4inv(m4inv(e, 4294967291), 4294967291)==e
+//     True
+//     ";
+//     return vec![(((((m[5] * m[2]) + (m[1] * m[4])) - ((m[5] * m[3]) * m[4])) - m[0]) % mo), (((m[5] * m[3]) - m[1]) % mo), (((m[3] * m[4]) - m[2]) % mo), (-(m[3]) % mo), (-(m[4]) % mo), (-(m[5]) % mo)];
+// }
+//
+// fn int2m4<T0, T1, RT>(num: T0, mo: T1) -> RT {
+//     "
+//     >>> e = [42821,772431,428543,443530,42121,7213]
+//     >>> e == int2m4(m42int(e,4294967291), 4294967291)
+//     True
+//     ";
+//     let m = vec![0, 0, 0, 0, 0, 0];
+//     let (num, m[5]) = divmod(num, mo);
+//     let (num, m[4]) = divmod(num, mo);
+//     let (num, m[3]) = divmod(num, mo);
+//     let (num, m[2]) = divmod(num, mo);
+//     let (num, m[1]) = divmod(num, mo);
+//     let (num, m[0]) = divmod(num, mo);
+//     return m;
+// }
+//
+// fn m42int<T0, T1, RT>(m: T0, mo: T1) -> RT {
+//     "
+//     >>> n = 986723489762345987253897254295863
+//     >>> m42int(int2m4(n, 4294967291), 4294967291) == n
+//     True
+//     ";
+//     return (((((m[5] + (m[4] * mo)) + (m[3] * mo.pow(2))) + (m[2] * mo.pow(3))) + (m[1] * mo.pow(4))) + (m[0] * mo.pow(5)));
 // }

@@ -87,6 +87,14 @@ fn inplace_divmod(a: &mut u128, b: u128) -> u128 {
     r
 }
 
+#[rustversion::beta]
+#[inline]
+fn inplace_divmod(a: &mut u128, b: u128) -> u128 {
+    let r = *a % b;
+    *a /= b;
+    r
+}
+
 #[inline]
 pub fn to_b62(n: &u128) -> DIGITS {
     let mut s = [0 as u8; NDIGITS];
