@@ -23,6 +23,7 @@
 
 # __version__ = '0.2103.1'
 from .colors import colorize128bit
+# noinspection PyUnresolvedReferences,PyPackageRequirements
 from .hosh import (
     n_bin_id_fromblob, n_id_fromperm, bin_id_fromn, n_bin_fromid, mul, minv, div, muls, mulpairs
 )
@@ -107,3 +108,44 @@ class Hash:
 
     def __eq__(self, other):
         return self.n == other.n
+
+"""
+benchmark
+
+In [1]: import timeit
+   ...: setup = '''
+   ...: from hosh import Hash
+   ...: a= Hash(9374713407134097134097314079071324970)
+   ...: b= Hash(blob=b"9374713407134097134097345364356435346")
+   ...: c= Hash(9864713407134097134097314079071324970)
+   ...: d= Hash(blob=b"9374713407134097134097314079071324dsf0")
+   ...: '''
+   ...: n=100000
+   ...: r=25
+   ...: u = round(10*min(timeit.repeat('Hash(9374713407134097134097314079071324970).bin', number=n, repeat=r, setup=setup)),2)
+   ...: d = round(10*min(timeit.repeat('~Hash(blob=b"9374713407134097134097345364356435346")', number=n, repeat=r, setup=setup)),2)
+   ...: t = round(10*min(timeit.repeat('Hash(9864713407134097134097314079071324970).id', number=n, repeat=r, setup=setup)),2)
+   ...: q = round(10*min(timeit.repeat('Hash(blob=b"9374713407134097134097314079071324dsf0").n', number=n, repeat=r, setup=setup)),2)
+   ...: c = round(10*min(timeit.repeat('a*b*c*d', number=n, repeat=r, setup=setup)),2)
+   ...: s = round(10*min(timeit.repeat('Hash(blob=b"9374713407134097134097345364356435346")', number=n, repeat=r, setup=setup)),2)
+   ...: print(u,d,t,q,c,s,"us")
+
+
+[0.9470198675496688,
+ 0.15437262357414447,
+ 0.1764705882352941,
+ 0.11887550200803214,
+ 0.3278443113772455,
+ 0.12307692307692308]
+
+In [13]: list(map(lambda x,y:float(x)/float(y), "1.96 2.58 1.97 1.92 2.25 1.97".split(" "), "1.51 13.15 8.33 12.45 6.68 11.05".split(" ")))
+Out[13]: 
+[1.2980132450331126,
+ 0.1961977186311787,
+ 0.23649459783913565,
+ 0.15421686746987953,
+ 0.33682634730538924,
+ 0.17828054298642532]
+
+
+"""
