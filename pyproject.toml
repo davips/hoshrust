@@ -3,9 +3,9 @@ requires = ["maturin>=0.10,<0.11"]
 build-backend = "maturin"
 
 [tool.poetry]
-name = "hosh"
-version = "0.210901.0"
-description = "Fast operable hash"
+name = "hoshrust"
+version = "0.211225.0"
+description = "Fast operable 22-digit hash for few repetitions"
 authors = ["davips <dpsabc@gmail.com>"]
 license = "GPL"
 readme = 'README.md'

@@ -175,8 +175,8 @@ dependencies = [
 ]
 
 [[package]]
-name = "hosh"
-version = "0.210317.0"
+name = "hoshrust"
+version = "0.211225.0"
 dependencies = [
  "arrayref",
  "blake3",

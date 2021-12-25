@@ -1,2 +1,2 @@
-cargo +nightly build --release --features "divrem" && rm hosh/*.so && cd hosh && ln -s ../target/release/libhosh.so hosh.so && cd -
+cargo +nightly build --release --features "divrem" && rm hoshrust/*.so && cd hoshrust && ln -s ../target/release/libhoshrust.so hoshrust.so && cd -
 tree -I 'incremental|deps|build|target|oprofile_data|dist|venv'

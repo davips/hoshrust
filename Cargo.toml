@@ -1,6 +1,6 @@
 [package]
-name = "hosh"
-version = "0.210317.0"
+name = "hoshrust"
+version = "0.211225.0"
 authors = ["davips <dpsabc@gmail.com>"]
 edition = "2018"
 readme = "README.md"
@@ -9,7 +9,7 @@ readme = "README.md"
 divrem = ["specialized-div-rem"]
 
 [lib]
-name = "hosh"
+name = "hoshrust"
 ## crate-type = ["cdylib", "rlib"]
 crate-type = ["cdylib"]  # produce a smaller binary, with no Rust-specific information inside of it
 

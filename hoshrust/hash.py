@@ -24,7 +24,7 @@
 # __version__ = '0.2103.1'
 from .colors import colorize128bit
 # noinspection PyUnresolvedReferences,PyPackageRequirements
-from .hosh import (
+from .hoshrust import (
     n_bin_id_fromblob, n_id_fromperm, bin_id_fromn, n_bin_fromid, mul, minv, div, muls, mulpairs
 )
 
@@ -114,7 +114,7 @@ benchmark
 
 In [1]: import timeit
    ...: setup = '''
-   ...: from hosh import Hash
+   ...: from hoshrust import Hash
    ...: a= Hash(9374713407134097134097314079071324970)
    ...: b= Hash(blob=b"9374713407134097134097345364356435346")
    ...: c= Hash(9864713407134097134097314079071324970)

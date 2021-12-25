@@ -40,7 +40,7 @@ pub mod math;
 /// A Python module implemented in Rust.
 #[pymodule]
 #[cfg(not(test))]
-fn hosh(py: Python, m: &PyModule) -> PyResult<()> {
+fn hoshrust(py: Python, m: &PyModule) -> PyResult<()> {
     let _ = py;
     m.add_function(wrap_pyfunction!(b62, m)?)?;
     m.add_function(wrap_pyfunction!(mul, m)?)?;
